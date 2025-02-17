@@ -28,7 +28,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import balogging.BALoggerUtil;
 import highscores.HighScores;
 import highscores.IBoardOutline;
 import highscores.NameInput;
@@ -40,13 +39,11 @@ public class Board extends Utilities implements IBoardOutline{
 	private MenuHandler menuHandler;
 	
 	private final String PRODUCT_NAME = "matching_game";
-	private String userDir;
 	
-	public Board(String usrDir){
+	public Board(){
 		handler = new ButtonHandler();
 		menuHandler = new MenuHandler();
 		
-		userDir = usrDir;
 		boardPage = new JFrame(PRODUCT_NAME);
 	}
 	
@@ -398,7 +395,7 @@ public class Board extends Utilities implements IBoardOutline{
 		
 		if(won()){
 			if(nameInput == null){
-				nameInput = new NameInput(properties.getRootDir(), this, PRODUCT_NAME, userDir);
+				nameInput = new NameInput(properties.getRootDir(), this, PRODUCT_NAME, "");
 			}
 			double endScore = Double.parseDouble(time.getText());
 			nameInput.setDescending();
@@ -450,7 +447,6 @@ public class Board extends Utilities implements IBoardOutline{
 	}
 	
 	private void startGame(){
-		balogger.startTimer();
 		lastCheck = System.currentTimeMillis();
 		pause.setEnabled(true);
 		stop.setEnabled(true);
@@ -467,8 +463,6 @@ public class Board extends Utilities implements IBoardOutline{
 	}
 	
 	private void stopGame() throws IOException{
-		balogger.stopTimer();
-		balogger.logScore("", matches.getText());
 		started = false;
 		move = false;
 		lastCheck = 0;
@@ -655,7 +649,6 @@ public class Board extends Utilities implements IBoardOutline{
 	}
 	public void init(Properties p){
 		properties = p;
-		balogger = new BALoggerUtil(properties.getRootDir(), PRODUCT_NAME, userDir);
 		if(!initialized){
 			createBoard();
 			index1 = -1;

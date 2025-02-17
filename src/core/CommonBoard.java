@@ -17,7 +17,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 
-import balogging.BALoggerUtil;
 import highscores.NameInput;
 
 public class CommonBoard {
@@ -26,7 +25,6 @@ public class CommonBoard {
 	protected JDesktopPane cardArea = null;
 	protected Properties properties;
 	protected NameInput nameInput = null;
-	protected BALoggerUtil balogger;
 	
 	protected Deck deck = null;
 	protected ArrayList<Card> cards = new ArrayList<Card>();
