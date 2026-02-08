@@ -39,11 +39,15 @@ public class Board extends Utilities implements IBoardOutline{
 	private ButtonHandler handler;
 	private MenuHandler menuHandler;
 	
-	public Board(){
+	private final String PRODUCT_NAME = "matching_game";
+	private String userDir;
+	
+	public Board(String usrDir){
 		handler = new ButtonHandler();
 		menuHandler = new MenuHandler();
 		
-		boardPage = new JFrame("matching_game");
+		userDir = usrDir;
+		boardPage = new JFrame(PRODUCT_NAME);
 	}
 	
 	private void createBoard(){
@@ -53,6 +57,7 @@ public class Board extends Utilities implements IBoardOutline{
 		boardPage.setIconImage(iconImage);
 		boardPage.setResizable(false);
 		boardPage.setPreferredSize(new Dimension(800, 750));
+		boardPage.setLocation(200, 50);
 		cardArea = new JDesktopPane();
 		cardArea.setBounds(0, 0, 800, 750);
 		String backgroundPath = properties.getBackground();
@@ -157,6 +162,8 @@ public class Board extends Utilities implements IBoardOutline{
 		boardPage.add(cardArea);
 		boardPage.pack();
 		boardPage.setVisible(true);
+		
+		doSmallerRandomDifficulty();
 	}
 	
 	private class ButtonHandler implements ActionListener{
@@ -391,7 +398,7 @@ public class Board extends Utilities implements IBoardOutline{
 		
 		if(won()){
 			if(nameInput == null){
-				nameInput = new NameInput(properties.getRootDir(), this);
+				nameInput = new NameInput(properties.getRootDir(), this, PRODUCT_NAME, userDir);
 			}
 			double endScore = Double.parseDouble(time.getText());
 			nameInput.setDescending();
@@ -648,7 +655,7 @@ public class Board extends Utilities implements IBoardOutline{
 	}
 	public void init(Properties p){
 		properties = p;
-		balogger = new BALoggerUtil(properties.getRootDir(), "matching_game");
+		balogger = new BALoggerUtil(properties.getRootDir(), PRODUCT_NAME, userDir);
 		if(!initialized){
 			createBoard();
 			index1 = -1;
@@ -700,5 +707,15 @@ public class Board extends Utilities implements IBoardOutline{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int getFrameHeight() {
+		return 750;
+	}
+
+	@Override
+	public int getFrameWidth() {
+		return 800;
 	}
 }
