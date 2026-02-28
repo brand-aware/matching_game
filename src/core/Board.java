@@ -1,7 +1,7 @@
 /**
- * @author mike802
+ * @author wontzer
  * 
- * product of - ???
+ * product of: brand-aware
  * 2017
  */
 package core;
@@ -365,6 +365,13 @@ public class Board extends Utilities implements IBoardOutline{
 		move = false;
 	}
 	
+	/**
+	 * If two selected cards match adds both cards to
+	 * matched list OR clears the mismatch and resets all
+	 * associated counters regardless
+	 * 
+	 * @throws IOException
+	 */
 	private void decideRandomOutcome() throws IOException{
 		Card card1 = cards.get(index1);
 		Card card2 = cards.get(index2);
