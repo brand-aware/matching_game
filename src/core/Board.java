@@ -47,6 +47,14 @@ public class Board extends Utilities implements IBoardOutline{
 		boardPage = new JFrame(PRODUCT_NAME);
 	}
 	
+	/**
+	 * Generates GUI that is the main and only gameplay screen
+	 * Displays:
+	 * - Menu bar
+	 * - Game logo
+	 * - Board with cards (facing down until game starts)
+	 *   * Size of board adjustable from menu
+	 */
 	private void createBoard(){
 		boardPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		String imageDir = properties.getImageDir();
@@ -163,14 +171,21 @@ public class Board extends Utilities implements IBoardOutline{
 		doSmallerRandomDifficulty();
 	}
 	
+	/**
+	 * Handles actions for start, stop, pause and all cards.
+	 * Cards, if clickable are flipped over
+	 */
 	private class ButtonHandler implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			
+			// used to determine if unknown button selection event
+			// was thrown by a "card" button
 			JButton newbutton = new JButton();
 			Class<?> button = newbutton.getClass();
 			Class<?> selected = event.getSource().getClass();
+			
 			if(event.getSource() == start){
 				startGame();
 			}else if(event.getSource() == stop){
@@ -189,8 +204,11 @@ public class Board extends Utilities implements IBoardOutline{
 			}else if(button == selected){
 				if(!paused()){
 					move = true;
+					// saved selected button to be acted upon later
 					pressedButton = (JButton) event.getSource();
 					if(randomize){
+						// if button has not already been selected indicated
+						// user has made a selection for their "turn"
 						if(!matched(pressedButton)){
 							randomFlip = true;
 						}
@@ -200,6 +218,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Handles all menu actions.  "File", "Options", and "About"
+	 * categories contian all selectable menu actions.
+	 */
 	private class MenuHandler implements ActionListener{
 
 		@Override
@@ -219,8 +241,8 @@ public class Board extends Utilities implements IBoardOutline{
 			}else if(event.getSource() == about){
 				JOptionPane.showMessageDialog(null, 
 						"product:\nmatching_game"
-						+ "\n\nby\n???\n\ncontact:\n"
-						+ "mike.drummond.802@hotmail.com", 
+						+ "\n\nby\nbrand-aware\n\ncontact:\n"
+						+ "wontzer@gmail.com", 
 						"about", 
 						JOptionPane.INFORMATION_MESSAGE, 
 						new ImageIcon(properties.getImageDir() + File.separator + "company.png"));
@@ -228,6 +250,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Adjusts settings for board with normal difficulty
+	 * and displays all 52 cards face down
+	 */
 	private void doNormalDifficulty(){
 		normalFlag = true;
 		smallFlag = false;
@@ -242,6 +268,11 @@ public class Board extends Utilities implements IBoardOutline{
 		startTime = 120;
 	}
 	
+	/**
+	 * Adjusts settings for board with small difficulty
+	 * and displays board with 28 cards selected randomly
+	 * in pairs, shuffled and displayed face-down.
+	 */
 	private void doSmallDifficulty(){
 		normalFlag = false;
 		smallFlag = true;
@@ -256,6 +287,11 @@ public class Board extends Utilities implements IBoardOutline{
 		startTime = 45;
 	}
 	
+	/**
+	 * Adjusts settings for board with smaller difficulty
+	 * and displays board with 20 cards selected randomly
+	 * in pairs, shuffled and displayed face-down.
+	 */
 	private void doSmallerDifficulty(){
 		normalFlag = false;
 		smallFlag = false;
@@ -270,6 +306,11 @@ public class Board extends Utilities implements IBoardOutline{
 		startTime = 20;
 	}
 	
+	/**
+	 * Sets the size flag to 28 cards picked in pairs and
+	 * displayed face-down.  Also sets the randomization gameplay
+	 * animation ready to go when the game starts.
+	 */
 	private void doSmallRandomDifficulty(){
 		normalFlag = false;
 		smallFlag = true;
@@ -285,6 +326,11 @@ public class Board extends Utilities implements IBoardOutline{
 		startTime = 45;
 	}
 	
+	/**
+	 * Sets the size flag to 20 cards picked in pairs and
+	 * displayed face-down.  Also sets the randomization gameplay
+	 * animation ready to go when the game starts.
+	 */
 	private void doSmallerRandomDifficulty(){
 		normalFlag = false;
 		smallFlag = false;
@@ -300,49 +346,69 @@ public class Board extends Utilities implements IBoardOutline{
 		startTime = 20;
 	}
 	
+	/**
+	 * VERY IMPORTANT!!!
+	 * Main gameplay driver.  All gameplay animation happens
+	 * through this method.
+	 * 
+	 * @throws IOException
+	 */
 	public synchronized void doMove() throws IOException{
+		// Once game is started timer starts a countdown to zero.
+		// This updates every iteration and happens often enough where
+		// it looks like it's always moving.
 		if(started){
 			updateTime();
 		}
+		
+		// move flag is set when an "card" is selected by the user
 		if(move && !paused()){
+			// "normal" non-randomized gameplay workflow
 			if(!randomize){
+				// Finds selected button from list of all buttons
 				for(int x = 0; x < display.size(); x++){
 					JButton selectedButton = display.get(x);
 					if(pressedButton == selectedButton){
-						if(index1 == -1){
+						if(index1 == -1){ // User has not selected a card yet
 							flipFirstCard(selectedButton, x);
-						}else{
+						}else{ // User is selecting second card
+							// Begin animation countdown to flipping cards back over
+							// if needed
 							if(animationCounter == 0){
 								flipSecondCard(selectedButton, x);
-							}else if(animationCounter >= 15){
+							}else if(animationCounter >= 15){ // either flip cards or not
 								decideOutcome();
-							}else if(animationCounter < 15){
+							}else if(animationCounter < 15){ // loop until for animation reasons
 								animationCounter++;
 							}
 						}
 					}
 				}
+			// "randomized" gameplay workflow
 			}else{
+				// whenever just starting out always have CPU flip a card
 				if(randomCounter1 == 0){
 					flipRandomCard();
+					// start CPU animation counter
 					randomCounter1++;
-				}else if(randomCounter1 > 15){
-					if(randomCounter2 == 0){
+				}else if(randomCounter1 > 15){ 
+					if(randomCounter2 == 0){ // player has not picked a card in time
 						unflipRandomCard();
 						randomCounter1 = 0;
 					}
-				}else{
+				}else{ // loop until action required
 					randomCounter1++;
 				}
 				
+				// will be set if user has selected a card
 				if(randomFlip){
-					if(randomCounter2 == 0){
+					if(randomCounter2 == 0){ // flip user selected card
 						flipRandomSelectedCard();
-						randomCounter2++;
-					}else if(randomCounter2 > 15){
+						randomCounter2++; // start user animation timer
+					}else if(randomCounter2 > 15){ // flip back or leave alone
 						decideRandomOutcome();
 						randomFlip = false;
-					}else{
+					}else{ // loop until animation is ready
 						randomCounter2++;
 					}
 				}
@@ -350,6 +416,14 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Determines if two selected cards are matching or not.  If a
+	 * match is not found, cards are flipped back over and selectable
+	 * again.  Resets any settings that were used to save the selected
+	 * cards/timers/etc.
+	 * 
+	 * @throws IOException
+	 */
 	private void decideOutcome() throws IOException{
 		Card card1 = cards.get(index1);
 		Card card2 = cards.get(index2);
@@ -388,6 +462,12 @@ public class Board extends Utilities implements IBoardOutline{
 		randomCounter2 = 0;
 	}
 	
+	/**
+	 * Makes cards no longer selectable and updates score and awards
+	 * bonus time.  If game has been won, displays high score screen.
+	 * 
+	 * @throws IOException
+	 */
 	private void displayMatch() throws IOException{
 		if(!randomize){
 			display.get(index1).setEnabled(false);
@@ -414,6 +494,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Flips the selected cards back over and makes them selectable
+	 * again.
+	 */
 	private void clearMismatch(){
 		display.get(index1).setEnabled(true);
 		ImageIcon icon = new ImageIcon(properties.getCoverPath());
@@ -424,15 +508,23 @@ public class Board extends Utilities implements IBoardOutline{
 		display.get(index2).setIcon(icon);
 	}
 	
+	/**
+	 * Used to "animate" timer at the top of the screen.  If timer
+	 * ever reaches zero, game is over.
+	 */
 	private void updateTime(){
+		// current time from game timer
 		double currentScore = 0;
 		if(!paused()){
 			currentScore = Double.parseDouble(time.getText());
+			// current time from system
 			double currentTime = System.currentTimeMillis();
 			
 			double difference = currentTime - lastCheck;
 			difference = difference * .001;
 			currentScore -= difference;
+			
+			// only display 2 decimal places for time
 			DecimalFormat formatter = new DecimalFormat(".##");
 			time.setText("" + formatter.format(currentScore));
 			lastCheck = currentTime;
@@ -446,6 +538,12 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Pause/unpause mechanic.  Determines if button is going
+	 * on or off.
+	 * 
+	 * @return boolean isPaused
+	 */
 	private boolean paused(){
 		if(pause.getText().compareTo("unpause") == 0){
 			return true;
@@ -453,6 +551,11 @@ public class Board extends Utilities implements IBoardOutline{
 		return false;
 	}
 	
+	/**
+	 * Starts timer and enables ALL gameplay buttons including
+	 * selectable cards.  If a randomization game type is selected,
+	 * starts CPU randomization moves.
+	 */
 	private void startGame(){
 		lastCheck = System.currentTimeMillis();
 		pause.setEnabled(true);
@@ -469,6 +572,13 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Stops game and resets ALL displays, cards, timers,
+	 * flags, and any other settings associated with gameplay.
+	 * Keeps selected gameplay type.
+	 * 
+	 * @throws IOException
+	 */
 	private void stopGame() throws IOException{
 		started = false;
 		move = false;
@@ -494,6 +604,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Initialized deck of cards, shuffles cards and loads
+	 * approperiate number of cards for board size selected.
+	 */
 	private final void loadCards(){
 		if(deck == null){
 			deck = new Deck();
@@ -512,6 +626,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Randomly places all 52 cards on the board.
+	 * 
+	 */
 	private final void loadCardsNormal(){
 		int count = 0;
 		while(count < 52){
@@ -524,6 +642,7 @@ public class Board extends Utilities implements IBoardOutline{
 			int number1 = (int) (numNumbers * Math.random());
 			int number2 = (int) (numSuits * Math.random());
 			
+			// picks random card that has not already been picked
 			if(!deck.hasBeenDealt(deckNumbers[number1], suits[number2])){
 				deck.deal(deckNumbers[number1], suits[number2]);
 				cards.add(new Card(deckNumbers[number1], suits[number2], properties));
@@ -532,6 +651,9 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Randomly places 28 cards on the board. 
+	 */
 	private final void loadCardsSmall(){
 		int count = 0;
 		while(count < 28){
@@ -544,6 +666,7 @@ public class Board extends Utilities implements IBoardOutline{
 			number1 = (int) (7 * Math.random());
 			number2 = (int) (numSuits * Math.random());
 			
+			// only selects cards that have not yet been selected
 			if(!deck.hasBeenDealt(deckNumbers[number1], suits[number2])){
 				deck.deal(deckNumbers[number1], suits[number2]);
 				cards.add(new Card(deckNumbers[number1], suits[number2], properties));
@@ -552,6 +675,9 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Randomly places 20 cards on the board.
+	 */
 	private final void loadCardsSmaller(){
 		int count = 0;
 		while(count < 20){
@@ -564,6 +690,7 @@ public class Board extends Utilities implements IBoardOutline{
 			number1 = (int) (5 * Math.random());
 			number2 = (int) (numSuits * Math.random());
 			
+			// only selects cards that have not already been selected
 			if(!deck.hasBeenDealt(deckNumbers[number1], suits[number2])){
 				deck.deal(deckNumbers[number1], suits[number2]);
 				cards.add(new Card(deckNumbers[number1], suits[number2], properties));
@@ -572,12 +699,18 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * GUI utility method for resetting display
+	 */
 	private void clearBoard(){
 		for(int x = 0; x < display.size(); x++){
 			cardArea.moveToBack(display.get(x));
 		}
 	}
 
+	/**
+	 * Displays all cards for selected board size face-down
+	 */
 	private void loadCovers(){
 		clearBoard();
 		display = new ArrayList<JButton>();
@@ -590,6 +723,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Normal board size (52 cards) placed in the gameplay area 
+	 * facing down.  Added to GUI here and given listeners
+	 */
 	private void loadCoversNormal(){
 		int xoffset = (800 / 2) - (13 * 55 / 2) - (12 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
@@ -610,6 +747,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Small board size (28 cards) placed in the gameplay area facing
+	 * down.  Added to GUI here and given listeners
+	 */
 	private void loadCoversSmall(){
 		int xoffset = (800 / 2) - (7 * 55 / 2) - (6 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
@@ -631,6 +772,10 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Smaller board size (20 cards) placed in the gameplay area facing
+	 * down.  Added to GUI here and given listeners
+	 */
 	private void loadCoversSmaller(){
 		int xoffset = (800 / 2) - (5 * 55 / 2) - (4 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
@@ -651,9 +796,19 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Helper method to determine if board has been created.
+	 * 
+	 * @return boolean isInitialized
+	 */
 	public final boolean initialized(){
 		return initialized;
 	}
+	/**
+	 * Sets properties and creates board.
+	 * 
+	 * @param Properties p
+	 */
 	public void init(Properties p){
 		properties = p;
 		if(!initialized){
@@ -664,11 +819,18 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 	
+	/**
+	 * Initializes high score screen
+	 */
 	@Override
 	public void init() {
 		init(properties);
 	}
 
+	/**
+	 * Enables game board after returning from high score screen
+	 * 
+	 */
 	@Override
 	public void enable() {
 		start.setEnabled(true);
@@ -677,6 +839,9 @@ public class Board extends Utilities implements IBoardOutline{
 		help.setEnabled(true);
 	}
 	
+	/**
+	 * Disables game board when visiting high score screen
+	 */
 	public void disable(){
 		start.setEnabled(false);
 		file.setEnabled(false);
@@ -684,6 +849,10 @@ public class Board extends Utilities implements IBoardOutline{
 		help.setEnabled(false);
 	}
 
+	/**
+	 * Adds high score screen GUI element to main GUI frame
+	 * and displays screen.  No score entered.
+	 */
 	@Override
 	public void initHighScores(hsProperties props) {
 		HighScores highScores = new HighScores(this);
@@ -697,6 +866,10 @@ public class Board extends Utilities implements IBoardOutline{
 		
 	}
 
+	/**
+	 * Adds high score screen GUI element to main GUI frame
+	 * and displays screen.  Score and username entered.
+	 */
 	@Override
 	public void initHighScores(String name, String rank, int score, hsProperties props) {
 		HighScores highScores = new HighScores(this);
@@ -709,11 +882,17 @@ public class Board extends Utilities implements IBoardOutline{
 		}
 	}
 
+	/**
+	 * Used to visually center high score screen within game.
+	 */
 	@Override
 	public int getFrameHeight() {
 		return 750;
 	}
 
+	/**
+	 * Used to visually center high score screen within game.
+	 */
 	@Override
 	public int getFrameWidth() {
 		return 800;

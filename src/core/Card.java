@@ -1,6 +1,6 @@
 package core;
 /**
- * @author mike802
+ * @author wontzer
  * @version 1.0 - 9/21/2013
  */
 

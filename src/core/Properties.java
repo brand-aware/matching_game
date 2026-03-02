@@ -1,6 +1,6 @@
 package core;
 /**
- * @author mike802
+ * @author wontzer
  * @version 1.0 - 9/21/2013
  */
 
@@ -22,6 +22,7 @@ public class Properties{
 	private Board board;
 	
 	public Properties(String dir){
+		// Determines where game is located and finds image folder
 		rootDir = dir;
 		coverPath = rootDir + File.separator + "cards" + File.separator + "cover.png";
 		emptyPath = rootDir + File.separator + "cards" + File.separator + "empty.png";
