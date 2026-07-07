@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -58,14 +59,15 @@ public class Board extends Utilities implements IBoardOutline{
 	private void createBoard(){
 		boardPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		String imageDir = properties.getImageDir();
-		Image iconImage = Toolkit.getDefaultToolkit().getImage(imageDir + File.separator + "company.png");
+		URL path = getClass().getResource(imageDir + "company.png");
+		Image iconImage = Toolkit.getDefaultToolkit().getImage(path);
 		boardPage.setIconImage(iconImage);
 		boardPage.setResizable(false);
 		boardPage.setPreferredSize(new Dimension(800, 750));
 		boardPage.setLocation(200, 50);
 		cardArea = new JDesktopPane();
 		cardArea.setBounds(0, 0, 800, 750);
-		String backgroundPath = properties.getBackground();
+		URL backgroundPath = properties.getBackground();
 		ImageIcon background = new ImageIcon(backgroundPath);
 		JLabel backgroundLabel = new JLabel();
 		backgroundLabel.setIcon(background);
@@ -731,7 +733,7 @@ public class Board extends Utilities implements IBoardOutline{
 		int xoffset = (800 / 2) - (13 * 55 / 2) - (12 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
 			for(int y = 0; y < 13; y++){
-				String path = properties.getCoverPath();
+				URL path = properties.getCoverPath();
 				ImageIcon icon = new ImageIcon(path);
 				JButton card = new JButton();
 				card.setIcon(icon);
@@ -755,7 +757,7 @@ public class Board extends Utilities implements IBoardOutline{
 		int xoffset = (800 / 2) - (7 * 55 / 2) - (6 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
 			for(int y = 0; y < 7; y++){
-				String path = properties.getCoverPath();
+				URL path = properties.getCoverPath();
 				ImageIcon icon = new ImageIcon(path);
 				JButton card = new JButton();
 				card.setIcon(icon);
@@ -780,7 +782,7 @@ public class Board extends Utilities implements IBoardOutline{
 		int xoffset = (800 / 2) - (5 * 55 / 2) - (4 * 5 / 2) - 10;
 		for(int x = 0; x < 4; x++){
 			for(int y = 0; y < 5; y++){
-				String path = properties.getCoverPath();
+				URL path = properties.getCoverPath();
 				ImageIcon icon = new ImageIcon(path);
 				JButton card = new JButton();
 				card.setIcon(icon);

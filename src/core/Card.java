@@ -6,6 +6,7 @@ package core;
 
 
 import java.io.File;
+import java.net.URL;
 
 public class Card {
 	
@@ -13,7 +14,7 @@ public class Card {
 	private String suit;
 	
 	private String filename;
-	private String path;
+	private URL path;
 	
 	private Properties properties;
 	
@@ -34,7 +35,7 @@ public class Card {
 			filename = "A_" + suit;
 		}
 		
-		path = properties.suitPath(suit) + File.separator + filename + ".png";
+		path = getClass().getResource(properties.suitPath(suit) + "/" + filename + ".png");
 	}
 	
 	public int getNumber(){
@@ -44,7 +45,7 @@ public class Card {
 		return suit;
 	}
 	
-	public String getPath(){
+	public URL getPath(){
 		return path;
 	}
 	public String getDetails(){

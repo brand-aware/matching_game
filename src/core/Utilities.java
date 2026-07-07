@@ -6,6 +6,8 @@
  */
 package core;
 
+import java.net.URL;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -31,7 +33,7 @@ public class Utilities extends CommonBoard{
 			index = (int) (Math.random() * maxSize);
 			card = cards.get(index);
 		}
-		String path = card.getPath();
+		URL path = card.getPath();
 		ImageIcon icon = new ImageIcon(path);
 		display.get(index).setIcon(icon);
 		display.get(index).setEnabled(false);
@@ -47,7 +49,7 @@ public class Utilities extends CommonBoard{
 		for(int x = 0; x < display.size(); x++){
 			if(display.get(x) == pressedButton){
 				Card card = cards.get(x);
-				String path = card.getPath();
+				URL path = card.getPath();
 				ImageIcon icon = new ImageIcon(path);
 				display.get(x).setIcon(icon);
 				display.get(x).setEnabled(false);
@@ -63,7 +65,7 @@ public class Utilities extends CommonBoard{
 	 * flips the randomly selected card back over automatically
 	 */
 	protected void unflipRandomCard(){
-		String path = properties.getCoverPath();
+		URL path = properties.getCoverPath();
 		ImageIcon icon = new ImageIcon(path);
 		display.get(index1).setIcon(icon);
 		display.get(index1).setEnabled(true);
@@ -124,7 +126,7 @@ public class Utilities extends CommonBoard{
 	protected void flipFirstCard(JButton selectedButton, int position){
 		index1 = position;
 		Card card = cards.get(index1);
-		String path = card.getPath();
+		URL path = card.getPath();
 		ImageIcon icon = new ImageIcon(path);
 		selectedButton.setIcon(icon);
 		display.set(index1, selectedButton);
@@ -143,7 +145,7 @@ public class Utilities extends CommonBoard{
 	protected void flipSecondCard(JButton selectedButton, int position){
 		index2 = position;
 		Card card = cards.get(index2);
-		String path = card.getPath();
+		URL path = card.getPath();
 		ImageIcon icon = new ImageIcon(path);
 		selectedButton.setIcon(icon);
 		display.set(index2, selectedButton);
