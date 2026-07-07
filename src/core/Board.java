@@ -391,7 +391,7 @@ public class Board extends Utilities implements IBoardOutline{
 					flipRandomCard();
 					// start CPU animation counter
 					randomCounter1++;
-				}else if(randomCounter1 > 15){ 
+				}else if(randomCounter1 > 20){ 
 					if(randomCounter2 == 0){ // player has not picked a card in time
 						unflipRandomCard();
 						randomCounter1 = 0;
