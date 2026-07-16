@@ -342,8 +342,9 @@ public class Board extends Utilities implements IBoardOutline{
 		loadCovers();
 		normal.setSelected(false);
 		small.setSelected(false);
+		smaller.setSelected(false);
 		randomSmall.setSelected(false);
-		randomSmaller.setSelected(false);
+		randomSmaller.setSelected(true);
 		randomMatches = new ArrayList<Card>();
 		startTime = 20;
 	}

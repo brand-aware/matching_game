@@ -35,10 +35,21 @@ public class Properties{
 		suitPaths.put("spades", cards + "spades");
 		
 		logo = getClass().getResource("/img/logo.png");
-		System.out.println("/img/background.png");
 		background = getClass().getResource("/img/background.png");
-		highScores = dir +File.separator+ "high_scores.txt";
+		String companyPath = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local"
+				+ File.separator + "brand-aware";
 		
+		File companyFolder = new File(companyPath);
+		if(!companyFolder.exists()) {
+			companyFolder.mkdir();
+		}
+		
+		String productPath = companyPath + File.separator + "matching_game";
+		File productFolder = new File(productPath);
+		if(!productFolder.exists()) {
+			productFolder.mkdir();
+		}
+		highScores = productPath + File.separator + "highScores.txt";
 	}
 	
 	public String getRootDir(){
