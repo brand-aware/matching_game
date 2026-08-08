@@ -4,7 +4,7 @@
  * product of: brand-aware
  * 2019
  */
-package core;
+package com.matching_game.core;
 
 import java.net.URL;
 

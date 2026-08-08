@@ -1,4 +1,4 @@
-package core;
+package com.matching_game.core;
 /**
  * @author wontzer
  * @version 1.0 - 2/28/2013

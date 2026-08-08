@@ -1,4 +1,4 @@
-package core;
+package com.matching_game.core;
 /**
  * @author wontzer
  * @version 1.0 - 9/21/2013
@@ -25,17 +25,17 @@ public class Properties{
 	public Properties(String dir){
 		rootDir = dir;
 		// Determines where game is located and finds image folder
-		coverPath = getClass().getResource("/cards/cover.png");
-		emptyPath = getClass().getResource("/cards/empty.png");
+		coverPath = getClass().getResource("/com/matching_game/cards/cover.png");
+		emptyPath = getClass().getResource("/com/matching_game/cards/empty.png");
 		
-		String cards = "/cards/";
+		String cards = "/com/matching_game/cards/";
 		suitPaths.put("clubs", cards + "clubs");
 		suitPaths.put("diamonds", cards + "diamonds");
 		suitPaths.put("hearts", cards + "hearts");
 		suitPaths.put("spades", cards + "spades");
 		
-		logo = getClass().getResource("/img/logo.png");
-		background = getClass().getResource("/img/background.png");
+		logo = getClass().getResource("/com/matching_game/img/logo.png");
+		background = getClass().getResource("/com/matching_game/img/background.png");
 		String companyPath = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Local"
 				+ File.separator + "brand-aware";
 		
@@ -66,7 +66,7 @@ public class Properties{
 		return emptyPath;
 	}
 	public String getImageDir(){
-		return "/img/";
+		return "/com/matching_game/img/";
 	}
 	public URL getLogo(){
 		return logo;

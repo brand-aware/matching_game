@@ -4,7 +4,7 @@
  * product of: brand-aware
  * 2017
  */
-package core;
+package com.matching_game.core;
 
 import java.io.IOException;
 
